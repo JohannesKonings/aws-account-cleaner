@@ -3,8 +3,12 @@ import {
   DeleteAlarmsCommand,
 } from "@aws-sdk/client-cloudwatch";
 
-export async function deleteCloudWatchAlarm(alarmName: string) {
+export async function deleteCloudWatchAlarm(alarmArn: string) {
   const client = new CloudWatchClient();
+  const alarmName = alarmArn.split(":").pop();
+  if (!alarmName) {
+    throw new Error(`Invalid alarm ARN: ${alarmArn}`);
+  }
   const command = new DeleteAlarmsCommand({
     AlarmNames: [alarmName],
   });

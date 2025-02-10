@@ -3,8 +3,12 @@ import {
   DeleteLogGroupCommand,
 } from "@aws-sdk/client-cloudwatch-logs";
 
-export async function deleteLogGroup(logGroupName: string) {
+export async function deleteLogGroup(logGroupArn: string) {
   const client = new CloudWatchLogsClient();
+  const logGroupName = logGroupArn.split(":").pop();
+  if (!logGroupName) {
+    throw new Error(`Invalid log group ARN: ${logGroupArn}`);
+  }
   const command = new DeleteLogGroupCommand({
     logGroupName,
   });
